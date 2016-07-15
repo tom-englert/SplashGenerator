@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="$(MSBuildToolsVersion)">
+  <Target Name="SplashGenerator" BeforeTargets="CopyFilesToOutputDirectory">
+    <Exec Command='"$(MSBuildThisFileDirectory)SplashGenerator.exe" "$(MSBuildProjectFullPath)" "$(MSBuildProjectDirectory)\$(IntermediateOutputPath)$(TargetName)$(TargetExt)"'/>
+  </Target>
+</Project>
