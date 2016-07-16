@@ -9,8 +9,9 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>SampleVB</RootNamespace>
     <AssemblyName>SampleVB</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MyType>Custom</MyType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>

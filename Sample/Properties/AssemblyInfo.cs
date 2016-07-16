@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Windows;
 
-[assembly: AssemblyTitle("Sample Application")]
+[assembly: AssemblyTitle("Sample Application (C#)")]
 [assembly: AssemblyDescription("This is a sample application")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("tom-englert.de")]

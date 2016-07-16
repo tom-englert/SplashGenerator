@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>SplashGenerator</id>
-    <version>$version$</version>
+    <version>1.0.0.0</version>
     <title>WPF SplashScreen image generator.</title>
     <authors>tom-englert.de</authors>
     <owners>tom-englert.de</owners>

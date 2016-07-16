@@ -11,12 +11,12 @@ Imports System.Windows
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("SampleVB")>
-<Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("SampleVB")>
+<Assembly: AssemblyTitle("Sample Application (VB)")>
+<Assembly: AssemblyDescription("This is a sample application")>
+<Assembly: AssemblyCompany("tom-englert.de")>
+<Assembly: AssemblyProduct("Tom's Toolbox")>
 <Assembly: AssemblyCopyright("Copyright ©  2016")>
-<Assembly: AssemblyTrademark("")>
+<Assembly: AssemblyTrademark("Tom's Toolbox is a trademark of tom-englert.de")>
 <Assembly: ComVisible(false)>
 
 'In order to begin building localizable applications, set 
