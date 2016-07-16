@@ -12,11 +12,11 @@ Install the SplashGenerator tool from [NuGet](https://www.nuget.org/packages/Spl
 - do not forget to set `TextOptions.TextFormattingMode="Display"`, else text might look ugly. You can use the sample [Splash.xaml](https://github.com/tom-englert/SplashGenerator/blob/master/SplashGenerator/Splash.xaml) as a scaffold
 
 When installing the SplashGenerator NuGet package a new build target will be added to your project. 
-This new build target ensures that the splash bitmap will be updated from the WPF UserControl after each build. 
+This new build target ensures that the splash bitmap will be updated from the WPF UserControl after each build.
 
-Now you just need to design your UserControl. File and version info can be used dynamically via binding. However due to the fact that the final splash is a bitmap, animations are not supported.
+Now you just need to design your splash UserControl. File and version info can be used dynamically via binding. However due to the fact that the final splash is a bitmap, animations are not supported.
 
-To get more infomrmation how the WPF splash screen works see e.g. [How to: Add a Splash Screen to a WPF Application](https://msdn.microsoft.com/en-us/library/cc656886.aspx)
+To get more information how the WPF splash screen works see e.g. [How to: Add a Splash Screen to a WPF Application](https://msdn.microsoft.com/en-us/library/cc656886.aspx)
 
 
 
