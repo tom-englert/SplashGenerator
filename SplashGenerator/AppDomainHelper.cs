@@ -4,13 +4,21 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
     /// A helper to ease dealing with <see cref="AppDomain"/> specific tasks.
     /// </summary>
-    public static class AppDomainHelper
+    public class AppDomainHelper
     {
+        private readonly string _targetDirectory;
+
+        public AppDomainHelper(string targetDirectory)
+        {
+            _targetDirectory = targetDirectory;
+        }
+
         /// <summary>
         /// Invokes the specified function in a temporary separate domain.
         /// </summary>
@@ -23,7 +31,7 @@
         /// <returns>
         /// The result of the function.
         /// </returns>
-        public static T InvokeInSeparateDomain<TA1, TA2, T>(this Func<TA1, TA2, T> func, TA1 arg1, TA2 arg2)
+        public T InvokeInSeparateDomain<TA1, TA2, T>(Func<TA1, TA2, T> func, TA1 arg1, TA2 arg2)
         {
             Contract.Requires(func != null);
 
@@ -45,7 +53,7 @@
         /// <returns>
         /// The result of the function.
         /// </returns>
-        public static T InvokeInSeparateDomain<TA1, TA2, TA3, T>(this Func<TA1, TA2, TA3, T> func, TA1 arg1, TA2 arg2, TA3 arg3)
+        public T InvokeInSeparateDomain<TA1, TA2, TA3, T>(Func<TA1, TA2, TA3, T> func, TA1 arg1, TA2 arg2, TA3 arg3)
         {
             Contract.Requires(func != null);
 
@@ -58,7 +66,7 @@
         /// <typeparam name="T">The type to create.</typeparam>
         /// <param name="appDomain">The application domain.</param>
         /// <returns>The proxy of the unwrapped type.</returns>
-        public static T CreateInstanceAndUnwrap<T>(this AppDomain appDomain) where T : class
+        private T CreateInstanceAndUnwrap<T>(AppDomain appDomain) where T : class
         {
             Contract.Requires(appDomain != null);
             Contract.Ensures(Contract.Result<T>() != null);
@@ -66,7 +74,7 @@
             return (T)appDomain.CreateInstanceAndUnwrap(typeof(T).Assembly.FullName, typeof(T).FullName);
         }
 
-        private static T InternalInvokeInSeparateDomain<T>(Delegate func, params object[] args)
+        private T InternalInvokeInSeparateDomain<T>(Delegate func, params object[] args)
         {
             Contract.Requires(func != null);
             Contract.Requires(args != null);
@@ -79,9 +87,9 @@
 
             try
             {
-                var helper = appDomain.CreateInstanceAndUnwrap<DomainHelper>();
+                var helper = CreateInstanceAndUnwrap<DomainHelper>(appDomain);
 
-                var result = helper.Invoke(func.Method, func.Target, args);
+                var result = helper.Invoke(_targetDirectory, func.Method, func.Target, args);
 
                 HandleException(result as Exception);
 
@@ -94,7 +102,7 @@
             }
         }
 
-        private static void HandleException(Exception exception)
+        private void HandleException(Exception exception)
         {
             if (exception == null)
                 return;
@@ -110,15 +118,34 @@
         private class DomainHelper : MarshalByRefObject
         {
             [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-            public object Invoke(MethodInfo method, object target, object[] args)
+            public object Invoke(string baseDirectory, MethodInfo method, object target, object[] args)
             {
                 try
                 {
+                    var assemblies = Directory.EnumerateFiles(baseDirectory)
+                        .Select(TryLoadAssembly)
+                        .Where(a => a != null)
+                        .ToArray();
+
+                    AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) => assemblies.FirstOrDefault(a => a.FullName.Equals(eventArgs.Name, StringComparison.OrdinalIgnoreCase));
+
                     return method.Invoke(target, args);
                 }
                 catch (Exception ex)
                 {
                     return ex;
+                }
+            }
+
+            private static Assembly TryLoadAssembly(string fileName)
+            {
+                try
+                {
+                    return Assembly.LoadFile(fileName);
+                }
+                catch
+                {
+                    return null;
                 }
             }
         }

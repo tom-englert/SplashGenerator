@@ -15,10 +15,12 @@
             try
             {
                 var projectFileName = args.FirstOrDefault();
-                var targetFileName = args.Skip(1).FirstOrDefault();
+                var targetPath = args.Skip(1).FirstOrDefault();
 
-                if (string.IsNullOrEmpty(projectFileName) || string.IsNullOrEmpty(targetFileName))
+                if (string.IsNullOrEmpty(projectFileName) || string.IsNullOrEmpty(targetPath))
                     throw new InvalidOperationException("Expected arguments: <project file> <target file name>");
+
+                var targetDirectory = Path.GetDirectoryName(targetPath);
 
                 var projectCollection = ProjectCollection.GlobalProjectCollection;
                 var project = projectCollection?.LoadProject(projectFileName);
@@ -34,8 +36,10 @@
 
                 using (var bitmapData = new MemoryStream())
                 {
-                    AppDomainHelper.InvokeInSeparateDomain(BitmapGenerator.GenerateSplashBitmap, targetFileName, splashResourceName, bitmapData);
-                    AssemblyHelper.ReplaceResource(targetFileName, splashResourceName, bitmapData);
+                    new AppDomainHelper(targetDirectory)
+                        .InvokeInSeparateDomain(BitmapGenerator.GenerateSplashBitmap, targetPath, splashResourceName, bitmapData);
+
+                    AssemblyHelper.ReplaceResource(targetPath, splashResourceName, bitmapData);
                 }
 
                 return 0;

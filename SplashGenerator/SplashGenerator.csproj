@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\packages\SplashGenerator.1.0.0\tools\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -113,6 +113,6 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-    <Exec Command="..\Pack.cmd" Condition="'$(Configuration)' == 'Release'"/>
+    <Exec Command="..\Pack.cmd" Condition="'$(Configuration)' == 'Release'" />
   </Target>
 </Project>
