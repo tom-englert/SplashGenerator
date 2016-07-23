@@ -10,19 +10,16 @@ namespace SplashGenerator
 
     internal static class BitmapGenerator
     {
-        public static Stream GenerateSplashBitmap(string targetFileName, string splashResourceName, Stream target)
+        public static Stream GenerateBitmap(string targetFileName, string resourceName, Stream target)
         {
             var targetAssembly = Assembly.LoadFile(targetFileName);
-            var splashControlTypeName = Path.GetFileNameWithoutExtension(splashResourceName);
-            var splashControlType = targetAssembly.GetTypes().FirstOrDefault(type => type.Name.Equals(splashControlTypeName, StringComparison.OrdinalIgnoreCase));
+            var controlTypeName = Path.GetFileNameWithoutExtension(resourceName);
+            var controlType = targetAssembly.GetTypes().FirstOrDefault(type => type.Name.Equals(controlTypeName, StringComparison.OrdinalIgnoreCase));
 
-            if (splashControlType == null)
-                throw new InvalidOperationException($"The project does not contain a type named '{splashControlTypeName}'. Add a user control named {splashControlTypeName}.xaml as a template for your splash screen.");
+            if (controlType == null)
+                throw new InvalidOperationException($"The project does not contain a type named '{controlTypeName}'. Add a user control named {controlTypeName}.xaml as a template for your splash screen.");
 
-            var control = splashControlType.GetConstructor(Type.EmptyTypes)?.Invoke(null) as UIElement;
-
-            if (control == null)
-                throw new InvalidOperationException($"Type {splashControlType} is not a UIElement with a default constructor. You need to have a user control named {splashControlTypeName}.xaml as a template for your splash screen.");
+            var control = CreateControl(controlType);
 
             return GenerateBitmap(control, target);
         }
@@ -43,6 +40,18 @@ namespace SplashGenerator
             encoder.Save(target);
 
             return target;
+        }
+
+        private static UIElement CreateControl(Type controlType)
+        {
+            try
+            {
+                return (UIElement)Activator.CreateInstance(controlType);
+            }
+            catch
+            {
+                throw new InvalidOperationException($"Type {controlType} is not a UIElement with a default constructor. You need to have a user control named {controlType.Name}.xaml as a template for your splash screen.");
+            }
         }
     }
 }

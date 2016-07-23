@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using System.Linq;
-    using System.Windows.Forms;
 
     using Microsoft.Build.Evaluation;
 
@@ -37,7 +36,7 @@
                 using (var bitmapData = new MemoryStream())
                 {
                     new AppDomainHelper(targetDirectory)
-                        .InvokeInSeparateDomain(BitmapGenerator.GenerateSplashBitmap, targetPath, splashResourceName, bitmapData);
+                        .InvokeInSeparateDomain(BitmapGenerator.GenerateBitmap, targetPath, splashResourceName, bitmapData);
 
                     AssemblyHelper.ReplaceResource(targetPath, splashResourceName, bitmapData);
                 }

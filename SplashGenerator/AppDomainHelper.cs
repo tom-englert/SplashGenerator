@@ -10,46 +10,30 @@
     /// <summary>
     /// A helper to ease dealing with <see cref="AppDomain"/> specific tasks.
     /// </summary>
-    public class AppDomainHelper
+    internal class AppDomainHelper
     {
-        private readonly string _targetDirectory;
+        private readonly string _baseDirectory;
 
-        public AppDomainHelper(string targetDirectory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppDomainHelper"/> class.
+        /// </summary>
+        /// <param name="baseDirectory">The base directory in which additional assemblies should be resolved.</param>
+        public AppDomainHelper(string baseDirectory)
         {
-            _targetDirectory = targetDirectory;
+            _baseDirectory = baseDirectory;
         }
 
         /// <summary>
         /// Invokes the specified function in a temporary separate domain.
         /// </summary>
-        /// <typeparam name="TA1">The type of the arguments.</typeparam>
-        /// <typeparam name="TA2">The type of the arguments.</typeparam>
+        /// <typeparam name="TA1">The type of the argument 1.</typeparam>
+        /// <typeparam name="TA2">The type of the argument 2.</typeparam>
+        /// <typeparam name="TA3">The type of the argument 3.</typeparam>
         /// <typeparam name="T">The type of the result.</typeparam>
         /// <param name="func">The function.</param>
-        /// <param name="arg1">The arguments of the function.</param>
-        /// <param name="arg2">The arguments of the function.</param>
-        /// <returns>
-        /// The result of the function.
-        /// </returns>
-        public T InvokeInSeparateDomain<TA1, TA2, T>(Func<TA1, TA2, T> func, TA1 arg1, TA2 arg2)
-        {
-            Contract.Requires(func != null);
-
-            return InternalInvokeInSeparateDomain<T>(func, arg1, arg2);
-        }
-
-
-        /// <summary>
-        /// Invokes the specified function in a temporary separate domain.
-        /// </summary>
-        /// <typeparam name="TA1">The type of the arguments.</typeparam>
-        /// <typeparam name="TA2">The type of the arguments.</typeparam>
-        /// <typeparam name="TA3">The type of the arguments.</typeparam>
-        /// <typeparam name="T">The type of the result.</typeparam>
-        /// <param name="func">The function.</param>
-        /// <param name="arg1">The arguments of the function.</param>
-        /// <param name="arg2">The arguments of the function.</param>
-        /// <param name="arg3">The arguments of the function.</param>
+        /// <param name="arg1">The argument 1 of the function.</param>
+        /// <param name="arg2">The argument 2 of the function.</param>
+        /// <param name="arg3">The argument 3 of the function.</param>
         /// <returns>
         /// The result of the function.
         /// </returns>
@@ -61,12 +45,12 @@
         }
 
         /// <summary>
-        /// A wrapper for <see cref="AppDomain.CreateInstanceAndUnwrap(string, string)"/>
+        /// A typed wrapper for <see cref="AppDomain.CreateInstanceAndUnwrap(string, string)"/>
         /// </summary>
         /// <typeparam name="T">The type to create.</typeparam>
         /// <param name="appDomain">The application domain.</param>
         /// <returns>The proxy of the unwrapped type.</returns>
-        private T CreateInstanceAndUnwrap<T>(AppDomain appDomain) where T : class
+        private static T CreateInstanceAndUnwrap<T>(AppDomain appDomain) where T : class
         {
             Contract.Requires(appDomain != null);
             Contract.Ensures(Contract.Result<T>() != null);
@@ -80,8 +64,7 @@
             Contract.Requires(args != null);
 
             var friendlyName = "Temporary domain for " + func.Method.Name;
-            var currentDomain = AppDomain.CurrentDomain;
-            var appDomain = AppDomain.CreateDomain(friendlyName, currentDomain.Evidence, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), string.Empty, false);
+            var appDomain = AppDomain.CreateDomain(friendlyName, null, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), string.Empty, false);
 
             Contract.Assume(appDomain != null);
 
@@ -89,7 +72,7 @@
             {
                 var helper = CreateInstanceAndUnwrap<DomainHelper>(appDomain);
 
-                var result = helper.Invoke(_targetDirectory, func.Method, func.Target, args);
+                var result = helper.Invoke(_baseDirectory, func.Method, func.Target, args);
 
                 HandleException(result as Exception);
 
@@ -102,7 +85,7 @@
             }
         }
 
-        private void HandleException(Exception exception)
+        private static void HandleException(Exception exception)
         {
             if (exception == null)
                 return;
@@ -113,7 +96,6 @@
             throw exception;
         }
 
-
         [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Created in another AppDomain.")]
         private class DomainHelper : MarshalByRefObject
         {
@@ -122,12 +104,15 @@
             {
                 try
                 {
-                    var assemblies = Directory.EnumerateFiles(baseDirectory)
-                        .Select(TryLoadAssembly)
-                        .Where(a => a != null)
-                        .ToArray();
+                    if (baseDirectory != null)
+                    {
+                        var assemblies = Directory.EnumerateFiles(baseDirectory)
+                            .Select(TryLoadAssembly)
+                            .Where(assembly => assembly != null)
+                            .ToArray();
 
-                    AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) => assemblies.FirstOrDefault(a => a.FullName.Equals(eventArgs.Name, StringComparison.OrdinalIgnoreCase));
+                        AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) => assemblies.FirstOrDefault(assembly => assembly.FullName.Equals(eventArgs.Name, StringComparison.OrdinalIgnoreCase));
+                    }
 
                     return method.Invoke(target, args);
                 }
