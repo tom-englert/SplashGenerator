@@ -1,5 +1,4 @@
-![Badge](https://tom-englert.visualstudio.com/DefaultCollection/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/4/badge)
-# SplashGenerator
+# SplashGenerator ![Badge](https://tom-englert.visualstudio.com/DefaultCollection/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/4/badge)
 SplashGenerator is a MSBuild target that automates the generation of the WPF splash screen bitmap from a WPF control.
 
 ## How it works
