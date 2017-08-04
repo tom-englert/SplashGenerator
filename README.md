@@ -5,7 +5,7 @@ SplashGenerator is a MSBuild target that automates the generation of the WPF spl
 Install the SplashGenerator tool from [NuGet](https://www.nuget.org/packages/SplashGenerator) to your WPF application that should have a splash screen. 
 - To properly install the NuGet package power shell must be available. 
 - The build target will require .Net 4.52 or later to be installed on the developer/build machine. 
-- Runtime requirement is .Net 3.5 (WPF Application)
+- Runtime support is .Net >= 3.5 (WPF Application)
 
 **If you don't have a splash screen added to your application yet:**
 - a sample splash image and user control will be added automatically to your project as a fully working scaffold you can start with immedeatly.
