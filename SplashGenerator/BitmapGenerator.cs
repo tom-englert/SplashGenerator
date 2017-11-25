@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices;
+using System.Windows.Threading;
+
 namespace SplashGenerator
 {
     using System;
@@ -19,9 +22,18 @@ namespace SplashGenerator
             if (controlType == null)
                 throw new InvalidOperationException($"The project does not contain a type named '{controlTypeName}'. Add a user control named {controlTypeName}.xaml as a template for your splash screen.");
 
-            var control = CreateControl(controlType);
+            var dispatcher = Dispatcher.CurrentDispatcher;
+     
+            UIElement control = null;
+            Stream bitmap = null;
 
-            return GenerateBitmap(control, target);
+            dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() => control = CreateControl(controlType)));
+            dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => bitmap = GenerateBitmap(control, target)));
+            dispatcher.BeginInvokeShutdown(DispatcherPriority.ContextIdle);
+
+            Dispatcher.Run();
+
+            return bitmap;
         }
 
         private static Stream GenerateBitmap(UIElement control, Stream target)
