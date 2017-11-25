@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>SplashGenerator is a MSBuild target that automates the generation of the WPF splash screen bitmap from a WPF control.</description>
     <summary>Automated generation of the WPF splash screen image.</summary>
-    <copyright>© 2016 tom-englert.de</copyright>
+    <copyright>© 2017 tom-englert.de</copyright>
     <tags>.Net WPF SplashScreen</tags>
   </metadata>
   <files>

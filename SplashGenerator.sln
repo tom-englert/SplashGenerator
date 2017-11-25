@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{6EE52977-04E6-4CDB-87FC-2874D44F8957}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -12,6 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplashGenerator", "SplashGe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A6352C09-EB37-4FB9-8B13-051EC39D38B6}"
 	ProjectSection(SolutionItems) = preProject
+		SplashGenerator\Properties\AssemblyInfo.cs = SplashGenerator\Properties\AssemblyInfo.cs
 		pack.cmd = pack.cmd
 		README.md = README.md
 		Release notes.md = Release notes.md
@@ -40,5 +41,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AAE3093C-2EDD-4521-8AAB-09CD3263C2F3}
 	EndGlobalSection
 EndGlobal
