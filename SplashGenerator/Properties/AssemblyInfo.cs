@@ -7,7 +7,7 @@ using SplashGenerator.Properties;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("tom-englert.de")]
 [assembly: AssemblyProduct("Tom's Toolbox")]
-[assembly: AssemblyCopyright("Copyright © tom-englert.de 2016")]
+[assembly: AssemblyCopyright("Copyright © tom-englert.de 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -18,6 +18,6 @@ namespace SplashGenerator.Properties
 {
     internal class Product
     {
-        public const string Version = "1.0.1.0";
+        public const string Version = "1.0.2.0";
     }
 }
