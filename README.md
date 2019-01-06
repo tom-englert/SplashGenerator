@@ -1,7 +1,10 @@
-# SplashGenerator ![Badge](https://tom-englert.visualstudio.com/DefaultCollection/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/4/badge) [![NuGet Status](http://img.shields.io/nuget/v/SplashGenerator.svg?style=flat)](https://www.nuget.org/packages/SplashGenerator/)
+# Discontinued
+This project will not be maintained any longer. Use it's more powerful successor https://github.com/tom-englert/SplashScreen.Fody
+
+## SplashGenerator ![Badge](https://tom-englert.visualstudio.com/DefaultCollection/_apis/public/build/definitions/75bf84d2-d359-404a-a712-07c9f693f635/4/badge) [![NuGet Status](http://img.shields.io/nuget/v/SplashGenerator.svg?style=flat)](https://www.nuget.org/packages/SplashGenerator/)
 SplashGenerator is a MSBuild target that automates the generation of the WPF splash screen bitmap from a WPF control.
 
-## How it works
+### How it works
 Install the SplashGenerator tool from [NuGet](https://www.nuget.org/packages/SplashGenerator) to your WPF application that should have a splash screen. 
 - To properly install the NuGet package power shell must be available. 
 - The build target will require .Net 4.52 or later to be installed on the developer/build machine. 
